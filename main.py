@@ -40,7 +40,8 @@ main_screen.blit(start_screen, (0, 0))
 
 def main():
     # This is the loop for the start screen
-    while True:
+    game_started = False
+    while game_started == False:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -48,7 +49,16 @@ def main():
             elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                 if buttons.clicked(start_button, event.pos) is not None:
                     start_button.click("done")
+                    game_started = True
         pygame.display.flip()            
-    # This is where the main loop will be placed
-
+    # Main loop
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                return
+            else:
+                print("Working")
+        pygame.display.flip()
+        
 main()
