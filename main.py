@@ -1,4 +1,4 @@
-from pygame.locals import QUIT, MOUSEBUTTONDOWN
+from pygame.locals import QUIT, MOUSEBUTTONDOWN, KEYDOWN
 import pygame
 from game_objs import Game
 import buttons
@@ -20,25 +20,26 @@ GREEN = pygame.Color(0, 255, 0)
 BLUE = pygame.Color(0, 0, 255)
 
 
-main_screen = pygame.display.set_mode((600, 600))
-main_screen.fill(BLACK)
+main_surface = pygame.display.set_mode((600, 600))
+main_surface.fill(BLACK)
 icon = pygame.image.load("Sprites/Icon.png").convert_alpha()
 pygame.display.set_icon(icon)
 pygame.display.set_caption("Snake Game")
 
 
+game = Game(main_surface)
+clock = pygame.time.Clock()
+
+
 start_screen = pygame.Surface((600, 600))
 start_screen.fill(BLACK)
 title = pygame.image.load("Sprites/Title.png")
-title_x = center(title, main_screen)
+title_x = center(title, main_surface)
 start_screen.blit(title, (title_x, 60))
-start_button = buttons.Button(sprite="Sprites/Play_Button.png", func=print)
-start_x = center(start_button.sprite, main_screen)
+start_button = buttons.Button(sprite="Sprites/Play_Button.png", func=game.update)
+start_x = center(start_button.sprite, main_surface)
 start_button.draw(start_screen, (start_x, 300))
-main_screen.blit(start_screen, (0, 0))
-
-
-game = Game(main_screen)
+main_surface.blit(start_screen, (0, 0))
 
 
 def main():
@@ -50,7 +51,7 @@ def main():
                 return
             elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                 if buttons.clicked(start_button, event.pos) is not None:
-                    start_button.click("done")
+                    start_button.click()
                     game_started = True
         pygame.display.flip()   
 
@@ -60,6 +61,20 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 return
-        pygame.display.flip()
+            elif event.type == KEYDOWN:
+                key_direction = {1073741906: (0, -1), 1073741903: (1, 0),
+                                 1073741905: (0, 1), 1073741904: (-1, 0)}
+                new_direction = key_direction.get(event.key)
+                negative = lambda x: -x
+                if new_direction is not None:
+                    if game.snake.direction != tuple(map(negative, new_direction)):  # Check that player is not trying to do 180 turn
+                        game.snake.direction = new_direction
+
+        game_state = game.update()
+        if game_state is not None:
+            break
         
+        clock.tick(6.5)
+        pygame.display.flip()
+    print(game.snake.score)
 main()
