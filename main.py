@@ -1,6 +1,6 @@
-from typing import Tuple
 from pygame.locals import QUIT, MOUSEBUTTONDOWN
 import pygame
+from game_objs import Game
 import buttons
 
 
@@ -38,10 +38,12 @@ start_button.draw(start_screen, (start_x, 300))
 main_screen.blit(start_screen, (0, 0))
 
 
+game = Game(main_screen)
+
+
 def main():
-    # This is the loop for the start screen
     game_started = False
-    while game_started == False:
+    while game_started == False:  # This is the loop for the start screen
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -50,15 +52,14 @@ def main():
                 if buttons.clicked(start_button, event.pos) is not None:
                     start_button.click("done")
                     game_started = True
-        pygame.display.flip()            
-    # Main loop
-    while True:
+        pygame.display.flip()   
+
+    game.update()
+    while True:   # Main loop
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 return
-            else:
-                print("Working")
         pygame.display.flip()
         
 main()
