@@ -98,6 +98,7 @@ class Game:
                 apple_y = randint(1,self.board_size-2)
                 apple = (apple_y, apple_x)
                 colliding = False
+                curr = self.snake.head
                 while curr is not None:  
                     if apple == curr.pos:
                         colliding = True
