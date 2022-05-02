@@ -58,9 +58,9 @@ def menu():
 
 def game_loop():
     game = Game(main_surface)
-    game.update()
+    game_state = game.update()
     directions = []  # Queue of direction changes
-    while True:
+    while game_state != -1:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -78,13 +78,13 @@ def game_loop():
             game.snake.direction = directions.pop(0)
 
         game_state = game.update()
-        if game_state is not None:  # We do this here instead of in the while logic to stop the game from rendering the snake in a wall
-            return game.score
         
         clock.tick(6.5)
         pygame.display.flip()
     
+    score = game.score
     del game
+    return score
 
 
 def end(score):
