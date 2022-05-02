@@ -59,6 +59,7 @@ def menu():
 def game_loop():
     game = Game(main_surface)
     game.update()
+    directions = []  # Queue of direction changes
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -71,7 +72,10 @@ def game_loop():
                 negative = lambda x: -x
                 if new_direction is not None:
                     if game.snake.direction != tuple(map(negative, new_direction)):  # Check that player is not trying to do 180 turn
-                        game.snake.direction = new_direction
+                        directions.append(new_direction)
+
+        if directions != []:  # Ensure that each direction change is executed individually and not just the most recent before the frame update
+            game.snake.direction = directions.pop(0)
 
         game_state = game.update()
         if game_state is not None:  # We do this here instead of in the while logic to stop the game from rendering the snake in a wall
@@ -121,4 +125,6 @@ def main():
     while True:
         score = game_loop()
         end(score)
+
+
 main()
