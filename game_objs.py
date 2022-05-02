@@ -17,6 +17,8 @@ class Snake:
         self.score = 1
     
     def add_node(self):
+        # We copy the list because otherwise tail_pos will change with tail as 
+        # it is updated due to python being pass by reference
         tail_pos = self.tail.pos.copy()
         self.update_pos()
         new_node = Node(tail_pos)
@@ -27,6 +29,7 @@ class Snake:
         self.score += 1
 
     def update_pos(self):
+        # We copy the list for the same reason as in add_node
         last_pos = self.head.pos.copy()
         self.head.pos[0] += self.direction[0]
         self.head.pos[1] += self.direction[1]
@@ -38,16 +41,17 @@ class Snake:
             curr = curr.next
             
 
-
 class Game:
     def __init__(self, screen, board_size=20):
         self.BLACK = pygame.Color(0, 0, 0)
         self.RED = pygame.Color(255, 0 , 0)
         self.GREEN = pygame.Color(0, 255, 0)
+
         self.SCREEN_SIZE = screen.get_height()
         self.CELL_SIZE = self.SCREEN_SIZE//board_size
         self.board_size = board_size
         CENTER = board_size//2
+
         self.snake = Snake([CENTER, CENTER])
 
         apple_x = randint(1,board_size-2)  # Account for walls, pixels start counting at zero
@@ -71,10 +75,7 @@ class Game:
         pygame.draw.rect(surface, self.RED, border3)
         
         self.draw_cell(self.apple, self.RED, surf=surface)
-
         self.draw_cell(self.snake.head.pos, self.GREEN, surf=surface)
-
-
         return surface
 
     def update(self):
@@ -105,16 +106,13 @@ class Game:
 
             self.apple = apple
             self.draw_cell(self.apple, self.RED)
-
         else:  # Draw a black rectangle over the previous tail pos, update snake pos
             last_tail_pos = self.snake.tail.pos
             self.draw_cell(last_tail_pos, self.BLACK)
             self.snake.update_pos()
         
         self.draw_cell(self.snake.head.pos, self.GREEN)
-
         self.main_screen.blit(self.game_surface, (0,0))
-
         return None
 
     def convert(self, cell) -> tuple[int]:
@@ -126,6 +124,8 @@ class Game:
         return coords
 
     def draw_cell(self, cell, color, surf=None):
+        # We do this here as opposed to in the define statement because this
+        # function is called when self.game_surf is being created
         if surf is None:
             surf = self.game_surface
         left, top = self.convert(cell)
