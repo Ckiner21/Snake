@@ -14,7 +14,6 @@ class Snake:
         self.head = Node(pos=start_pos)
         self.tail = self.head
         self.direction = (0,0)  # (delta_y, delta_x) with 0,0 with -y being up
-        self.score = 1
     
     def add_node(self):
         # We copy the list because otherwise tail_pos will change with tail as 
@@ -26,7 +25,6 @@ class Snake:
         old_tail = self.tail
         self.tail = new_node
         self.tail.prev = old_tail
-        self.score += 1
 
     def update_pos(self):
         # We copy the list for the same reason as in add_node
@@ -53,6 +51,7 @@ class Game:
         CENTER = board_size//2
 
         self.snake = Snake([CENTER, CENTER])
+        self.score = 1
 
         apple_x = randint(1,board_size-2)  # Account for walls, pixels start counting at zero
         apple_y = randint(1,board_size-2)
@@ -92,6 +91,7 @@ class Game:
 
         if new_head == list(self.apple):  # The add node function updates the pos, so no need
             self.snake.add_node()
+            self.score += 1
             colliding = True
             while colliding: # Make sure the apple is not colliding with the snake
                 apple_x = randint(1,self.board_size-2)

@@ -35,10 +35,10 @@ def menu():
     start_screen = pygame.Surface((600, 600))
     start_screen.fill(BLACK)
     title = pygame.image.load("Sprites/Title.png")
-    title_x = center(title, main_surface)
+    title_x = center(title, start_screen)
     start_screen.blit(title, (title_x, 60))
     start_button = buttons.Button(sprite="Sprites/Play_Button.png")
-    start_x = center(start_button.sprite, main_surface)
+    start_x = center(start_button.sprite, start_screen)
     start_button.draw(start_screen, (start_x, 300))
     main_surface.blit(start_screen, (0, 0))
 
@@ -75,7 +75,7 @@ def game_loop():
 
         game_state = game.update()
         if game_state is not None:  # We do this here instead of in the while logic to stop the game from rendering the snake in a wall
-            break
+            return game.score
         
         clock.tick(6.5)
         pygame.display.flip()
@@ -83,14 +83,22 @@ def game_loop():
     del game
 
 
-def end():
+def end(score):
     end_screen = pygame.Surface((600, 600))
     end_screen.fill(BLACK)
     end_banner = pygame.image.load("Sprites/Game_over.png")
-    banner_x = center(end_banner, main_surface)
+    banner_x = center(end_banner, end_screen)
     end_screen.blit(end_banner, (banner_x, 60))
+
+    pygame.font.init()
+    GOLD = pygame.Color(255, 145, 0)
+    impact_font = pygame.font.SysFont("impact", 24)
+    score = impact_font.render(f"Final Score: {score}", True, GOLD)
+    score_x = center(score, end_screen)
+    end_screen.blit(score, (score_x, 200))
+
     replay = buttons.Button(sprite="Sprites/Replay_Button.png")
-    replay_x = center(replay.sprite, main_surface)
+    replay_x = center(replay.sprite, end_screen)
     replay.draw(end_screen, (replay_x, 300))
     main_surface.blit(end_screen, (0, 0))
 
@@ -111,6 +119,6 @@ def end():
 def main():
     menu()
     while True:
-        game_loop()
-        end()
+        score = game_loop()
+        end(score)
 main()
