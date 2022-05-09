@@ -66,8 +66,8 @@ def game_loop():
                 pygame.quit()
                 exit()
             elif event.type == KEYDOWN:
-                key_direction = {1073741906: (0, -1), 1073741903: (1, 0),
-                                 1073741905: (0, 1), 1073741904: (-1, 0)}
+                key_direction = {1073741906: (-1, 0), 1073741903: (0, 1),
+                                 1073741905: (1, 0), 1073741904: (0, -1)}
                 new_direction = key_direction.get(event.key)
                 negative = lambda x: -x
                 if new_direction is not None:

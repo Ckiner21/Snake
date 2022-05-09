@@ -96,7 +96,7 @@ class Game:
             while colliding: # Make sure the apple is not colliding with the snake
                 apple_x = randint(1,self.board_size-2)
                 apple_y = randint(1,self.board_size-2)
-                apple = (apple_y, apple_x)
+                apple = [apple_y, apple_x]
                 colliding = False
                 curr = self.snake.head
                 while curr is not None:  
@@ -129,7 +129,7 @@ class Game:
         # function is called when self.game_surf is being created
         if surf is None:
             surf = self.game_surface
-        left, top = self.convert(cell)
+        top, left = self.convert(cell)
         cell_rect = pygame.Rect(left, top, self.CELL_SIZE, self.CELL_SIZE)
         pygame.draw.rect(surf, color, cell_rect)
     
